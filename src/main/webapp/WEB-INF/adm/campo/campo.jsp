@@ -1,15 +1,15 @@
-<%@page import="app.model.Local"%>
+<%@page import="app.model.Campo"%>
 <%@page import="java.util.List"%>
 <%@page import="app.zelper.Constants"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%
-    List<Local> locales = (List<Local>) request.getAttribute("locales");
+    List<Campo> campos = (List<Campo>) request.getAttribute("campos");
 %>
 <!DOCTYPE html>
 <html lang="en">
     <head>
         <meta charset="utf-8">
-        <title> Locales </title>
+        <title> Campos Deportivos </title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
         <%@include file="/public/header.jsp" %>
@@ -26,24 +26,24 @@
 
                 <div class="span9">
                     <div class="row">
-                        <a class=" btn btn-primary pull-right" href="<%=contextPath%>/adm/locales?action=<%=Constants.ACTION_CREATE%>"> Nuevo </a>
-                        <h1> Locales </h1>
+                        <a class=" btn btn-primary pull-right" href="<%=contextPath%>/adm/campo?action=<%=Constants.ACTION_CREATE%>"> Nuevo </a>
+                        <h1> Campos Deportivos </h1>
                     </div>
                     
-                    <% if (!locales.isEmpty()) {%>
+                    <% if (!campos.isEmpty()) {%>
                     <table class="table table-striped table-hover"> 
                         <thead>
+                        <th> Local </th>
                         <th> Descripción </th>
-                        <th> Dirección </th>
-                        <th> Teléfono </th>
+                        <th> Costo/Hora </th>
                         <th></th>
                         </thead>
                         <tbody>
-                            <% for (Local local : locales) {%>
+                            <% for (Campo campo : campos) {%>
                             <tr>
-                                <td> <%=local.getDescripcion()%> </td>
-                                <td> <%=local.getDireccion()%> </td>
-                                <td> <%=local.getTelefono()%> </td>
+                                <td> <%=campo.getLocal().getDescripcion()%> </td>
+                                <td> <%=campo.getDescripcion()%> </td>
+                                <td> <%=campo.getCostoHora()%> </td>
                                 <td> 
                                     <div class="btn-group">
                                         <a class="dropdown-toggle" data-toggle="dropdown" role="menu"  href="#">
@@ -51,11 +51,11 @@
                                         </a>
                                         <ul class="dropdown-menu pull-right">
                                             <li>
-                                                <a href="<%=contextPath%>/adm/locales?action=<%=Constants.ACTION_UPDATE%>&id=<%=local.getId()%>">
+                                                <a href="<%=contextPath%>/adm/campo?action=<%=Constants.ACTION_UPDATE%>&id=<%=campo.getId()%>">
                                                 Editar<a>
                                             </li>
                                             <li>
-                                                <a href="<%=contextPath%>/adm/locales?action=<%=Constants.ACTION_DELETE%>&id=<%=local.getId()%>">
+                                                <a href="<%=contextPath%>/adm/campo?action=<%=Constants.ACTION_DELETE%>&id=<%=campo.getId()%>">
                                                     Eliminar<a>
                                             </li>
                                         </ul>

@@ -1,5 +1,6 @@
-package app.controller.local;
+package app.controller.campo;
 
+import app.model.Campo;
 import app.model.Local;
 import app.zelper.Constants;
 import app.zelper.Helper;
@@ -12,25 +13,25 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet("/adm/locales")
-public class LocalController extends HttpServlet {
+@WebServlet("/adm/campo")
+public class CampoController extends HttpServlet {
 
-    private LocalService service;
+    private CampoService service;
 
-    public LocalController() {
-        service = new LocalService();
+    public CampoController() {
+        service = new CampoService();
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         int action = Helper.toInteger(request.getParameter("action"), Constants.ACTION_LIST);
-            
+
         switch (action) {
             case Constants.ACTION_CREATE:
                 this.create(request, response);
                 break;
-                
+
             case Constants.ACTION_UPDATE:
                 this.update(request, response);
                 break;
@@ -45,63 +46,72 @@ public class LocalController extends HttpServlet {
         }
 
     }
-    
+
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
+        Campo campo = new Campo();
+        campo.setDescripcion(request.getParameter("descripcion"));
+        campo.setCostoHora(Double.parseDouble(request.getParameter("costo")));
+
         Local local = new Local();
-        local.setDescripcion(request.getParameter("descripcion"));
-        local.setDireccion(request.getParameter("direccion"));
-        local.setTelefono(request.getParameter("telefono"));
-        
+        local.setId(Long.parseLong(request.getParameter("local")));
+
+        campo.setLocal(local);
+
         Long id = Long.parseLong(request.getParameter("id"));
-        if(id > 0){
-            local.setId(id);
-            service.update(local);
-        }else{
-            service.save(local);
+        if (id > 0) {
+            campo.setId(id);
+            service.update(campo);
+        } else {
+            service.save(campo);
         }
 
-        response.sendRedirect(request.getContextPath()+"/adm/locales");
+        response.sendRedirect(request.getContextPath() + "/adm/campo");
     }
-    
+
     protected void list(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<Local> locales = service.list();
-        request.setAttribute("locales", locales);
-            RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/adm/local/local.jsp");
-            rd.forward(request, response);
-      
+        List<Campo> campos = service.list();
+        request.setAttribute("campos", campos);
         
+        RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/adm/campo/campo.jsp");
+        rd.forward(request, response);
+
+
     }
 
     protected void create(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        List<Local> locales = service.listLocal();
+        request.setAttribute("locales", locales);
+        
+        request.setAttribute("campo", new Campo());
 
-        request.setAttribute("local", new Local());
-
-        RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/adm/local/localForm.jsp");
+        RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/adm/campo/campoForm.jsp");
         rd.forward(request, response);
 
     }
 
     protected void update(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        List<Local> locales = service.listLocal();
+        request.setAttribute("locales", locales);
+        
+        
+        Campo campo = new Campo();
+        campo.setId(Long.parseLong(request.getParameter("id")));
+        request.setAttribute("campo", service.get(campo));
 
-        Local local = new Local();
-        local.setId(Long.parseLong(request.getParameter("id")));
-
-        request.setAttribute("local", service.get(local));
-
-        RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/adm/local/localForm.jsp");
+        RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/adm/campo/campoForm.jsp");
         rd.forward(request, response);
 
     }
-    
+
     protected void delete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        Local local = new Local();
-        local.setId(Long.parseLong(request.getParameter("id")));
-        service.delete(local);
+        Campo campo = new Campo();
+        campo.setId(Long.parseLong(request.getParameter("id")));
+        service.delete(campo);
 
-        response.sendRedirect(request.getContextPath()+"/adm/locales");
+        response.sendRedirect(request.getContextPath() + "/adm/campo");
 
     }
 }

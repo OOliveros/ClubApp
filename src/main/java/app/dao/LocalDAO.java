@@ -35,7 +35,7 @@ public class LocalDAO extends BaseDAO {
             }
 
         } catch (SQLException e) {
-            System.err.println(e.getMessage());
+            e.printStackTrace();
         } finally {
             this.cerrarResultSet(rs);
             this.cerrarStatement(stmt);
@@ -113,7 +113,7 @@ public class LocalDAO extends BaseDAO {
     }
 
     public Local update(Local local) {
-        String query = "update local direccion=?,descripcion=?,estado=?,maps=?,telefono=? where id=?";
+        String query = "update local set direccion=?,descripcion=?,estado=?,maps=?,telefono=? where id=?";
         Connection con = null;
         PreparedStatement stmt = null;
         try {
